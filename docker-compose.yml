@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpass
+      POSTGRES_DB: microtask_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  api_gateway:
+    build: ./api_gateway
+    depends_on: [postgres, service_users, service_orders]
+    ports: ["3000:3000"]
+    env_file: .env.development
+
+  service_users:
+    build: ./service_users
+    depends_on: [postgres]
+    ports: ["3001:3001"]
+    env_file: .env.development
+
+  service_orders:
+    build: ./service_orders
+    depends_on: [postgres, service_users]
+    ports: ["3002:3002"]
+    env_file: .env.development
+
+volumes:
+  pgdata:
