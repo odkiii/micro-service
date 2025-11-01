@@ -5,6 +5,9 @@ const PORT = process.env.PORT || 8000;
 import express from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
+const USERS_URL = process.env.USERS_URL || 'http://service_users:8001';
+const ORDERS_URL = process.env.ORDERS_URL || 'http://service_orders:8002';
+
 app.get('/health', (req, res) => {
   res.json({status: 'API Gateway running'});
 });
@@ -12,7 +15,7 @@ app.get('/health', (req, res) => {
 app.use(
   "/api/users",
   createProxyMiddleware({
-    target: "http://localhost:3001",
+    target: "USERS_URL",
     changeOrigin: true,
     pathRewrite: { "^/api/users": "" },
   })
@@ -21,7 +24,7 @@ app.use(
 app.use(
   "/api/orders",
   createProxyMiddleware({
-    target: "http://localhost:3002",
+    target: "ORDERS_URL",
     changeOrigin: true,
     pathRewrite: { "^/api/orders": "" },
   })
