@@ -4,13 +4,16 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8000;
 
-app.get('/users', (req, res) => {
-    res.json([]);
-});
+let users = [
+  {id: 1, name: 'Ivan'},
+  {id: 2, name: 'Ralina'}
+];
+
+app.get('/users', (req, res) => res.json(users));
 
 app.listen(PORT, () => console.log(`Users service running on ${PORT}`));
 
-const users = [];
+
 app.post('/users', (req, res) => {
     const { email, name } = req.body;
     const id = Date.now().toString();
@@ -19,8 +22,20 @@ app.post('/users', (req, res) => {
     res.status(201).json({ success: true, data: user });
 });
 
+app.get('/users', (req, res) => res.json(users));
+
 app.get('/users/:id', (req, res) => {
     const user = users.find(u => u.id === req.params.id);
     if (!user) return res.status(404).json({ success: false, error: 'User not found' });
     res.json({ success: true, data: user });
+});
+
+app.put('/users/:id', (req, res) => {
+  let user = users.find(u => u.id == req.params.id);
+  if (user) Object.assign(user, req.body);
+  res.json(user || {});
+});
+app.delete('/users/:id', (req, res) => {
+  users = users.filter(u => u.id != req.params.id);
+  res.json({status: 'deleted'});
 });
