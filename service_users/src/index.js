@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pino = require('pino');
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 app.use(express.json());
 
