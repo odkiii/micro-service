@@ -8,11 +8,8 @@ app.use(cors());
 app.use(express.json());
 const PORT = process.env.PORT || 8000;
 
-import express from "express";
-import { createProxyMiddleware } from "http-proxy-middleware";
-
-const USERS_URL = process.env.USERS_URL || 'http://service_users:8001';
-const ORDERS_URL = process.env.ORDERS_URL || 'http://service_orders:8002';
+const USERS_URL = process.env.USERS_URL || 'http://localhost:8001/users';
+const ORDERS_URL = process.env.ORDERS_URL || 'http://localhost:8002/orders';
 
 app.get('/health', (req, res) => {
   res.json({status: 'API Gateway running'});
@@ -33,7 +30,6 @@ function makeProxy(target) {
       if (req.headers['authorization']) proxyReq.setHeader('authorization', req.headers['authorization']);
       proxyReq.setHeader('x-request-id', req.requestId);
     },
-    pathRewrite: (path, req) => path.replace(/^\/api/, '') // убрать "/api" 
   });
 }
 
